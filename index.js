@@ -5,12 +5,29 @@ const MongoClient = require('mongodb').MongoClient;
 const fileUpload = require('express-fileupload');
 const ObjectId = require('mongodb').ObjectId;
 
+
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');;
+
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('productPic'));
 app.use(fileUpload());
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "Library API",
+      version: '1.0.0',
+    },
+  },
+  apis: ["index.js"],
+};
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
 
 const port = 5000;
 require('dotenv').config();
@@ -48,7 +65,16 @@ client.connect(err => {
         })
   })
 
-
+/**
+ * @swagger
+ * /allBooksBySearch:
+ *   get:
+ *     description: Get all books, if search value empty then display all books
+ *     responses:
+ *       200:
+ *         description: Success
+ * 
+ */
   app.get('/allBooksBySearch', (req, res)=>{    //-----------home page product fileter ----------------------------
     const search = req.query.search;
     var regex = new RegExp(["", search, ""].join(""), "i");
@@ -58,6 +84,17 @@ client.connect(err => {
     } )
   })
 
+
+  /**
+ * @swagger
+ * /addNewBookRequest:
+ *   post:
+ *     description: Add a request for new books by user
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ */
   app.post('/addNewBookRequest', (req, res)=>{    //-----------Add a request for new books by user ----------------------------
     const newRequest = req.body;
     booksRequestCollection.insertOne(newRequest)
@@ -143,6 +180,8 @@ client.connect(err => {
   })
 
 });
+
+
 
 app.listen(process.env.PORT || port) 
 

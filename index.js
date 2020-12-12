@@ -102,15 +102,33 @@ client.connect(err => {
       res.send(documents)
     } )
   })
-
-  app.post('/addNewUser', (req, res)=>{    //-----------home page product fileter ----------------------------
+  /**
+ * @swagger
+ * /addNewUser:
+ *   post:
+ *     description: create a new user 
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ */
+  app.post('/addNewUser', (req, res)=>{    //-----------create a  new user ----------------------------
     const newRequest = req.body;
     usersCollection.insertOne(newRequest)
     .toArray( (err, documents) => {
       res.send(documents)
     } )
   })
-
+  /**
+ * @swagger
+ * /checkUserInfo:
+ *   get:
+ *     description: check user information. user  login with email and password 
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ */
   app.get('/checkUserInfo', (req, res)=>{    //-----------Find user info to check is user have an account? and check if email and password is same? ----------------------------
     const queryEmail = req.query.email;
     console.log(queryEmail)
@@ -121,16 +139,36 @@ client.connect(err => {
     } )
   })
 
-  app.get('/bookRequestList', (req, res)=>{    //----------- dont use yet ----------------------------
-    const queryEmail = req.query.email;
-    booksRequestCollection.find({email: queryEmail})
-    .toArray( (err, documents) => {
-      res.send(documents)
-    } )
-  })
+
+//   /**
+//  * @swagger
+//  * /bookRequestList:
+//  *   get:
+//  *     description: Add a request for new books by user
+//  *     responses:
+//  *       201:
+//  *         description: Success
+//  * 
+//  */
+//   app.get('/bookRequestList', (req, res)=>{    //----------- dont use yet ----------------------------
+//     const queryEmail = req.query.email;
+//     booksRequestCollection.find({email: queryEmail})
+//     .toArray( (err, documents) => {
+//       res.send(documents)
+//     } )
+//   })
 
 
-
+  /**
+ * @swagger
+ * /updateStatus:
+ *   patch:
+ *     description:update order stsatus, if sustus is true then this books shown in home page else it will be hide
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ */
   app.patch('/updateStatus', (req,res)=>{    //----------- update order stsatus------------------------------
     bookstCollection.updateOne(
       {_id: ObjectId(req.body.id)}, //filter
@@ -143,6 +181,17 @@ client.connect(err => {
     })
   })
 
+
+    /**
+ * @swagger
+ * /delete:
+ *   delete:
+ *     description: Remove a book by admin 
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ */
    app.delete('/delete/:id', (req,res)=>{ // delete data from mongodb
     bookstCollection.deleteOne({_id: ObjectId(req.params.id)})
         .then(result => {
@@ -150,6 +199,17 @@ client.connect(err => {
         })
      })
 
+
+       /**
+ * @swagger
+ * /editBooks:
+ *   patch:
+ *     description: Update books information
+ *     responses:
+ *       201:
+ *         description: Success
+ * 
+ */
   app.patch('/editBooks', (req,res)=>{    //----------- update books info------------------------------
 
    const file = req.files.file
@@ -166,8 +226,6 @@ client.connect(err => {
       size: file.size,
       img: Buffer.from(encImg, 'base64')
     };
-
-    
     bookstCollection.updateOne( 
       {_id: ObjectId(id)}, //filter
       { 

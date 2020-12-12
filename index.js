@@ -159,17 +159,17 @@ client.connect(err => {
 //   })
 
 
-  /**
+   /**
  * @swagger
  * /updateStatus:
  *   patch:
- *     description:update order stsatus, if sustus is true then this books shown in home page else it will be hide
+ *     description: Update  books status, if true then it is shown in home page 
  *     responses:
  *       201:
  *         description: Success
  * 
  */
-  app.patch('/updateStatus', (req,res)=>{    //----------- update order stsatus------------------------------
+  app.patch('/updateStatus', (req,res)=>{    //----------- update books  stsatus------------------------------
     bookstCollection.updateOne(
       {_id: ObjectId(req.body.id)}, //filter
       { 

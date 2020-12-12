@@ -144,7 +144,6 @@ client.connect(err => {
 
 });
 
-// app.listen(process.env.PORT || port) 
+app.listen(process.env.PORT || port) 
 
 
-app.listen(port)
